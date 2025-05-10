@@ -78,6 +78,10 @@
             width: 111px;
         }
 
+        #sex{
+            width:70px;
+        }
+
         .vitals {
             display: flex;
             flex-wrap: wrap;
@@ -298,7 +302,14 @@
         </div>
         <label>Name: <input type="text" onkeyup="updateValue(this.value,'name')" /></label><br />
         <label>Age: <input type="text" onkeyup="updateValue(this.value,'age')" /></label><br />
-        <label>Sex: <input type="text" onkeyup="updateValue(this.value,'sex')" /></label><br />
+        <label>Sex: 
+            <select name="" id="" onchange="updateValue(this.value,'sex')">
+                <option value=""></option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Trans-gender">Trans-gender</option>
+            </select>
+        </label><br />
         <label>Weight: <input type="text" onkeyup="updateValue(this.value,'weight')" /></label><br />
         <label>BP: <input type="text" onkeyup="updateValue(this.value,'bp')" /></label><br />
         <label>PR: <input type="text" onkeyup="updateValue(this.value,'pr')" /></label><br />
