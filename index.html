@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctor Prescription Pad</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <style>
+        #content {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            width: 210mm;
+            height: 297mm;
+            box-sizing: border-box;
+            background: #fff;
+            border: 20px solid rgba(240, 218, 218, 0.766);
+            padding: 10mm;
+            background-image: url('./medicalLogoTransparent.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 60%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10mm;
+        }
+
+        .left-info {
+            font-size: 14px;
+            color: #000;
+        }
+
+        .left-info strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .logo {
+            text-align: center;
+            flex: 1;
+        }
+
+        .logo img {
+            /* width: 50px; */
+            height: 100px;
+        }
+
+        .right-info {
+            font-size: 14px;
+            text-align: right;
+            color: #000;
+        }
+
+        .details {
+            margin-bottom: 10mm;
+            border-top: 2px solid #000;
+            padding-top: 5mm;
+        }
+
+        .details input {
+            border: none;
+            border-bottom: 1px solid #000;
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        #name {
+            width: 200px;
+        }
+
+        #date {
+            width: 111px;
+        }
+
+        .vitals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .vitals span {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20mm;
+            left: 10mm;
+            right: 10mm;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 14px;
+            border-top: 1px solid #ccc;
+            padding-top: 5mm;
+        }
+
+        .footer .center {
+            text-align: center;
+            flex: 1;
+            top: 10px
+        }
+
+        .background-logo {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.05;
+            font-size: 120px;
+            font-weight: bold;
+            z-index: 2;
+            background-image: url('./medicalLogo.jpg');
+        }
+
+        .txt {
+            width: 20mm;
+            border-bottom: 1px solid black;
+        }
+
+        .text2 {
+            width: 63px !important;
+        }
+
+        form#medicalForm {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        form#medicalForm label {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+
+        form#medicalForm input,
+        form#medicalForm select {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        form#medicalForm button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form#medicalForm button:hover {
+            background-color: #0056b3;
+        }
+
+
+
+        /* Default: hidden content is not visible */
+        #content {
+            display: none;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 600px) {
+            form#medicalForm {
+                padding: 15px;
+            }
+
+            form#medicalForm input,
+            form#medicalForm select {
+                font-size: 16px;
+            }
+
+            form#medicalForm label {
+                font-size: 16px;
+            }
+            #mobileno{
+                bottom: 15mm;
+                right: 5mm;
+            }
+            #content{
+                height: 285mm;
+            }
+            .footer {
+                bottom:35mm;
+            }
+        }
+
+        /* On print */
+        @media print {
+
+            /* Show hidden content */
+            #content {
+                display: block !important;
+            }
+
+            /* Optionally hide specific screen-only elements */
+            button {
+                display: none !important;
+            }
+
+            #medicalForm{
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <div class="background-logo"></div>
+
+        <div class="header">
+            <div class="left-info" id="left-info">
+                <!-- <strong id="">Dr. Chinmaya Nial</strong>
+                MBBS, M.D<br />
+                (SKIN SPECIALIST)<br />
+                EX-VIMSAR, BURLA<br />
+                Regd. No. 23880/2019 -->
+            </div>
+
+            <div class="logo">
+                <img src="icon.jpg" alt="Logo" />
+            </div>
+
+            <div class="right-info" id="right-info">
+                <!-- ଡ଼. ଚିନ୍ମୟ ନିଆଲ<br />
+                (ଚର୍ମ ଚିକିତ୍ସକ)<br />
+                ପୂର୍ବ - ବିମସାର, ବୁର୍ଲା<br />
+                ରେ.ନଂ: ୨୩୮୮୦/୨୦୧୯ -->
+            </div>
+        </div>
+
+        <div class="details">
+            <div>
+                Name: <input type="text" id="name" disabled />
+                Age: <input type="text" id="age" disabled />
+                SEX: <input type="text" id="sex" disabled />
+                DATE: <input type="text" id="date" disabled />
+            </div>
+            <br>
+            <div>
+                WEIGHT: <input type="text" class="text2" id="weight" disabled />
+                BP: <input type="text" class="text2" id="bp" disabled />
+                PR: <input type="text" class="text2" id="pr" disabled />
+                SPO2: <input type="text" class="text2" id="spo2" disabled />
+                TEMP: <input type="text" class="text2" id="temp" disabled />
+            </div>
+            <!-- <div class="vitals">
+            <span>WEIGHT: <span id="weight" class="txt"></span></span>
+            <span>BP: <span id="bp" class="txt"></span></span>
+            <span>PR: <span id="pr" class="txt"></span></span>
+            <span>SPO2: <span id="spo2" class="txt"></span></span>
+            <span>TEMP: <span id="temp" class="txt"></span></span>
+        </div> -->
+        </div>
+
+        <div class="footer">
+            <div style="text-align: center;"><span
+                    style="font-size: x-large;font-weight: bold;color:rgb(210, 27, 88)">ମହାବୀର ହେଲଥକେୟାର</span>
+                <br /><span style="font-size: large;font-weight: bold;">ବଲଧିଆମାଲ ଛକ</span>
+            </div>
+            <div class="center">
+                <img src="plus.png" width="50" height="50" alt="" srcset=""><br><br>
+                <strong style="padding:5px 8px;background:rgb(61, 61, 61);color:white;border-radius:12px;">Your Health
+                    is our Priority</strong>
+            </div>
+            <div style="text-align: center;"><span
+                    style="font-size: x-large;font-weight: bold;color:rgb(210, 27, 88)">ମହାବାର ମେଡିକୋ</span><br />
+                <span style="font-size: large;font-weight: bold;">ହସପିଟାଲ ଛକ, ଜୁନାଗଡ଼</span>
+            </div>
+        </div>
+        <div id="mobileno" style="position: absolute;bottom: 0;right: 0;">
+            MOB: 9777211799
+        </div>
+    </div>
+
+    <form id="medicalForm">
+        <div style="text-align: center;">
+            <img src="./medicalLogo.jpg" alt="" srcset="">
+        </div>
+        <label>Name: <input type="text" onkeyup="updateValue(this.value,'name')" /></label><br />
+        <label>Age: <input type="text" onkeyup="updateValue(this.value,'age')" /></label><br />
+        <label>Sex: <input type="text" onkeyup="updateValue(this.value,'sex')" /></label><br />
+        <label>Weight: <input type="text" onkeyup="updateValue(this.value,'weight')" /></label><br />
+        <label>BP: <input type="text" onkeyup="updateValue(this.value,'bp')" /></label><br />
+        <label>PR: <input type="text" onkeyup="updateValue(this.value,'pr')" /></label><br />
+        <label>SPO2: <input type="text" onkeyup="updateValue(this.value,'spo2')" /></label><br />
+        <label>Temp: <input type="text" onkeyup="updateValue(this.value,'temp')" /></label><br /><br />
+        <label for="doctor">Select Doctor: <select name="" id="doctor" onchange="setDoctor(this.value)">
+            <option value="">-Select Doctor-</option>
+            <option value="chinmay">Dr. Chinmaya Nial</option>
+        </select></label>
+        
+        <br>
+        <button type="button" onclick="downloadPrescription()">Download Prescription</button>
+    </form>
+
+
+    <script>
+        let today = new Date().toLocaleDateString();
+        document.getElementById('date').value=today;
+
+        function downloadPrescription(){
+            if(document.getElementById('doctor').value==''){
+                alert('Select Doctor !');
+                return;
+            }
+            window.print();
+        }
+
+        var doctorsDetail = [
+            {
+                name: "chinmay",
+                odia: {
+                    name: "ଡ଼. ଚିନ୍ମୟ ନିଆଲ",
+                    desgn: "MBBS, M.D",
+                    specialist: "(ଚର୍ମ ଚିକିତ୍ସକ)",
+                    otherInfo: "ପୂର୍ବ - ବିମସାର, ବୁର୍ଲା",
+                    regdno: "୨୩୮୮୦/୨୦୧୯"
+                },
+                english: {
+                    name: "Dr. Chinmaya Nial",
+                    desgn: "MBBS, M.D",
+                    specialist: "(SKIN SPECIALIST)",
+                    otherInfo: "EX-VIMSAR, BURLA",
+                    regdno: "23880/2019"
+                }
+            }
+        ]
+        function updateValue(value, id) {
+            document.getElementById(id).value = value;
+        }
+
+        function setDoctor(value) {
+            let detail = doctorsDetail.filter((item) => item.name == value);
+            let left_info = `<strong id="">${detail[0].english.name}</strong>
+                ${detail[0].english.desgn}<br />
+                ${detail[0].english.specialist}<br />
+                ${detail[0].english.otherInfo}<br />
+                Regd. No. ${detail[0].english.regdno}`;
+            console.log(left_info)
+            let right_info = `<strong id="">${detail[0].odia.name}</strong><br />
+                ${detail[0].odia.desgn}<br />
+                ${detail[0].odia.specialist}<br />
+                ${detail[0].odia.otherInfo}<br />
+                ରେ.ନଂ: ${detail[0].odia.regdno}`;
+            console.log(right_info)
+            document.getElementById('left-info').innerHTML = left_info;
+            document.getElementById('right-info').innerHTML = right_info;
+        }
+    </script>
+
+</body>
+
+</html>
